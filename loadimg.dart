@@ -145,26 +145,27 @@ Future<void> loadImage(
     int dest_mac) async {
   int n;
 
-  final imageOriginal = decodeImage(File(imageFile).readAsBytesSync())!;
-  var image = copyResize(imageOriginal, width: columnCount);
-
+  final imageOriginal = await decodeImageFile(imageFile);
+  var image = copyResize(imageOriginal as Image, width: columnCount);
+  // var image = imageOriginal as Image;
+  print("Image: ${image.width} x ${image.height}");
   // Examples how to draw circles and lines:
   // drawCircle(image, 64, 32, 30, 0x80ffffff);
   // drawLine(image, 10, 50, 120, 20, 0x8000ff00, thickness: 2, antialias: true);
 
-  var textColor = 0xffffffff;
-  if (useBlack) textColor = 0xff000000;
-  if (text2 == "") {
-    drawStringCentered(image, arial_24, text1,
+  var textColor = ColorRgb8(255, 255, 255);
+  if (useBlack) textColor = ColorRgb8(0, 0, 0);
+  if (text2.isEmpty == "" && text1.isNotEmpty) {
+    drawString(image, text1, font: arial24,
         y: (rowCount - 24) ~/ 2, color: textColor);
   } else {
-    drawStringCentered(image, arial_24, text1,
+    drawString(image, text1, font: arial24,
         y: (rowCount ~/ 2 - 24) ~/ 2, color: textColor);
-    drawStringCentered(image, arial_24, text2,
+    drawString(image, text2, font: arial24,
         y: (rowCount ~/ 2 - 24) ~/ 2 + rowCount ~/ 2, color: textColor);
   }
 
-  final imageData = image.getBytes(format: Format.bgr);
+  final imageData = image.getBytes(order: ChannelOrder.rgb);
 
   int brightness = getBrightness(brightnessPercent);
 
