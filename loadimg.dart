@@ -175,10 +175,15 @@ Future<void> loadImage(
 
   for (int y = 0; y < rowCount; ++y) {
     // calculateFrame5500Row(t, y);
-    frame5500fromImage(
-        y, Uint8List.view(imageData.buffer, y * 3 * image.width));
-    n = l2.send(
-        src_mac, dest_mac, 0x5500, frameData5500, frame5500DataLength, 0);
+    try {
+      Uint8List part = Uint8List.view(imageData.buffer, y * 3 * image.width);
+      frame5500fromImage(y, part);
+      n = l2.send(
+          src_mac, dest_mac, 0x5500, frameData5500, frame5500DataLength, 0);
+    } on RangeError {
+      print("Out of image to display");
+      break;
+    }
   }
 
   // Without the following delay the end of the bottom row module flickers in the last line
