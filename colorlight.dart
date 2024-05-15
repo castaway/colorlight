@@ -14,7 +14,8 @@ import 'package:l2ethernet/l2ethernet.dart';
 // My LED matrix size
 
 const columnCount = 128;
-const rowCount = 64;
+const rowCount = 1024;
+// const rowCount = 64;
 
 const IF_NAMESIZE = 16;
 
